@@ -1,1 +1,1 @@
-# book-store
+# book-store full stack app
