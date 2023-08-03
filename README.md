@@ -1,1 +1,1 @@
-# book-store full stack app
+# book-store full stack app using React, Typescript, Node
