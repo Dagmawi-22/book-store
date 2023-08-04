@@ -30,10 +30,9 @@ class Bookepository implements IBookRepository {
     });
   }
 
-  retrieveAll(searchParams: {title?: string}): Promise<Book[]> {
+  retrieveAll(): Promise<Book[]> {
     let query: string = "SELECT * FROM books";
-    let condition: string = "";
-
+    
     return new Promise((resolve, reject) => {
       connection.query<Book[]>(query, (err, res) => {
         if (err) reject(err);

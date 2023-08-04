@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import Tutorial from "../entity/book.model";
 import bookRepository from "../repository/book.repository";
 import Book from "../entity/book.model";
 
@@ -13,7 +12,7 @@ export default class BookController {
     }
 
     try {
-      const book: Tutorial = req.body;
+      const book: Book = req.body;
       const savedBook = await bookRepository.save(book);
 
       res.status(201).send(savedBook);
@@ -25,12 +24,36 @@ export default class BookController {
   }
 
   async findAll(req: Request, res: Response) {
-    const title = typeof req.query.title === "string" ? req.query.title : "";
-
+   
     try {
-      const tutorials = await bookRepository.retrieveAll({ title: title });
+      let books = await bookRepository.retrieveAll();
+      let page:string = req.query.page! as string; 
+      let page1:number = parseInt(page)
+      let limit:string = req.query.limit! as string; 
+      let limit1:number = parseInt(limit)
+      const startIndex = page1-1;
+      const endIndex = page1 * limit1;
+      books = books.slice(startIndex, endIndex)
+      res.status(200).send(books);
+    } catch (err) {
+      res.status(500).send({
+        message: "Some error occurred while retrieving books."
+      });
+    }
+  }
 
-      res.status(200).send(tutorials);
+  async buyBook(req: Request, res: Response) {
+   
+    try {
+      let books = await bookRepository.retrieveAll();
+      let page:string = req.query.page! as string; 
+      let page1:number = parseInt(page)
+      let limit:string = req.query.limit! as string; 
+      let limit1:number = parseInt(limit)
+      const startIndex = page1-1;
+      const endIndex = page1 * limit1;
+      books = books.slice(startIndex, endIndex)
+      res.status(200).send(books);
     } catch (err) {
       res.status(500).send({
         message: "Some error occurred while retrieving books."
@@ -42,9 +65,9 @@ export default class BookController {
     const id: number = parseInt(req.params.id);
 
     try {
-      const tutorial = await bookRepository.retrieveById(id);
+      const book = await bookRepository.retrieveById(id);
 
-      if (tutorial) res.status(200).send(tutorial);
+      if (book) res.status(200).send(book);
       else
         res.status(404).send({
           message: `Cannot find Book with id=${id}.`
